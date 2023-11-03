@@ -49,7 +49,7 @@ def apply_ascii_filter(image, new_width=100):
     for i in range(height):
         for j in range(width):
             pixel_value = image.getpixel((j, i))
-            ascii_str += ASCII_CHARS[int(pixel_value // font_size_slider.get())]  # Map grayscale value to ASCII chars
+            ascii_str += ASCII_CHARS[int(pixel_value // mapping_size_slider.get())]  # Map grayscale value to ASCII chars
         ascii_str += "\n"
     return ascii_str
 
@@ -72,29 +72,30 @@ def create_ascii_image(ascii_str, font_size):
 
 
 def generate_ascii_image():
-    global after_image
     if before_image is not None:
-        ascii_str = apply_ascii_filter(before_image, 5) 
+        ascii_str = apply_ascii_filter(before_image, font_size_slider.get())
         ascii_image, image_width, image_height = create_ascii_image(ascii_str, font_size_slider.get())
-        after_image = ascii_image
         photo = ImageTk.PhotoImage(ascii_image)
         after_image_label.config(image=photo, width=image_width, height=image_height)
         after_image_label.image = photo
+
 
 
 # Main window
 root = tk.Tk()
 root.title("ASCII Image Creator")
 
-# 2 panes to display before and after images
-before_image_label = tk.Label(root)
-after_image_label = tk.Label(root)
-before_image_label.pack(side="left")
-after_image_label.pack(side="right")
+root.geometry("800x600")
 
 # create a button to select image/file_path
 open_button = tk.Button(root, text="Select Image", command=open_image)
 open_button.pack()
+
+# create a slider to select grayscale to ascii char mapping
+mapping_size_label =  tk.Label(root, text="GRYSCL to ASCII Size")
+mapping_size_label.pack()
+mapping_size_slider = tk.Scale(root, from_=1, to=100, orient="horizontal")
+mapping_size_slider.pack()
 
 # create a slider to select font size for ASCII image
 font_size_label = tk.Label(root, text="Font Size")
@@ -107,8 +108,14 @@ font_size_slider.pack()
 generate_ascii_image_button = tk.Button(root, text="Generate ASCII Image", command=generate_ascii_image)
 generate_ascii_image_button.pack()
 
+# 2 panes to display before and after images
+before_image_label = tk.Label(root)
+after_image_label = tk.Label(root)
+before_image_label.pack(side="left")
+after_image_label.pack(side="right")
+
 # create a button to save ascii image
-save_button = tk.Button(root, text="Save Image", command=save_file(after_image))
-save_button.pack()
+# save_button = tk.Button(root, text="Save Image", command=save_file(after_image))
+# save_button.pack()
 
 root.mainloop()
