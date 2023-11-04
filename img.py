@@ -23,6 +23,7 @@ def open_image():
 
 # Open a file browser to save an image as " "
 def save_file(image): 
+    global after_image
     if after_image is not None:
         file_path = filedialog.asksaveasfilename(defaultextension=".jpeg", filetypes=[("Image files", "*.png *.jpg *.jpeg *.gif *.bmp *.ppm *.pgm")])
         image.save(file_path)
@@ -71,6 +72,7 @@ def create_ascii_image(ascii_str, font_size):
     return image, image_width, image_height
 
 def generate_ascii_image(): 
+    global after_image
     if before_image is not None:
         ascii_str = apply_ascii_filter(before_image, font_size_slider.get())
         ascii_image, image_width, image_height = create_ascii_image(ascii_str, font_size_slider.get())
@@ -107,7 +109,7 @@ generate_ascii_image_button = tk.Button(root, text="Generate ASCII Image", comma
 generate_ascii_image_button.pack()
 
 # create a button to save ascii image
-save_button = tk.Button(root, text="Save Image", command=save_file(after_image))
+save_button = tk.Button(root, text="Save Image", command=lambda: save_file(after_image))
 save_button.pack()
 
 # 2 panes to display before and after images
