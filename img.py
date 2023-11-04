@@ -28,8 +28,9 @@ def save_file(image):
         file_path = filedialog.asksaveasfilename(defaultextension=".jpeg", filetypes=[("Image files", "*.png *.jpg *.jpeg *.gif *.bmp *.ppm *.pgm")])
         image.save(file_path)
 
-def scale_image(image, new_width=100):
+def scale_image(image, new_width=500):  
     (original_width, original_height) = image.size
+    print("original_width: " + str(original_width) + " | original_height: " + str(original_height))
     aspect_ratio = original_height / float(original_width)
     new_height = int(aspect_ratio * new_width)
     new_image = image.resize((new_width, new_height))
@@ -41,7 +42,7 @@ def apply_grayscale_filter(image):
     return grayscale_image
 
 def apply_ascii_filter(image, new_width=100):
-    # image = scale_image(image, new_width)
+    # image = scale_image(image, new_width) # useful for scaling down high resolution images
     image = apply_grayscale_filter(image)
 
     width, height = image.size
@@ -94,13 +95,13 @@ open_button.pack()
 # create a slider to select grayscale to ascii char mapping
 mapping_size_label =  tk.Label(root, text="GRYSCL to ASCII Size")
 mapping_size_label.pack()
-mapping_size_slider = tk.Scale(root, from_=1, to=100, orient="horizontal")
+mapping_size_slider = tk.Scale(root, from_=25, to=75, orient="horizontal")
 mapping_size_slider.pack()
 
 # create a slider to select font size for ASCII image
 font_size_label = tk.Label(root, text="Font Size")
 font_size_label.pack()
-font_size_slider = tk.Scale(root, from_=4, to=100, orient="horizontal")
+font_size_slider = tk.Scale(root, from_=4, to=24, orient="horizontal")
 font_size_slider.set(16)  # initial font size
 font_size_slider.pack()
 
