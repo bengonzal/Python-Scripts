@@ -22,9 +22,9 @@ def open_image():
         return
 
 # Open a file browser to save an image as " "
-def save_file(image):
-    file_path = filedialog.asksaveasfilename(defaultextension=".jpeg", filetypes=[("Image files", "*.png *.jpg *.jpeg *.gif *.bmp *.ppm *.pgm")])
-    if file_path:
+def save_file(image): 
+    if after_image is not None:
+        file_path = filedialog.asksaveasfilename(defaultextension=".jpeg", filetypes=[("Image files", "*.png *.jpg *.jpeg *.gif *.bmp *.ppm *.pgm")])
         image.save(file_path)
 
 def scale_image(image, new_width=100):
@@ -40,7 +40,7 @@ def apply_grayscale_filter(image):
     return grayscale_image
 
 def apply_ascii_filter(image, new_width=100):
-    image = scale_image(image, new_width)
+    # image = scale_image(image, new_width)
     image = apply_grayscale_filter(image)
 
     width, height = image.size
@@ -70,16 +70,14 @@ def create_ascii_image(ascii_str, font_size):
 
     return image, image_width, image_height
 
-
-def generate_ascii_image():
+def generate_ascii_image(): 
     if before_image is not None:
         ascii_str = apply_ascii_filter(before_image, font_size_slider.get())
         ascii_image, image_width, image_height = create_ascii_image(ascii_str, font_size_slider.get())
+        after_image = ascii_image
         photo = ImageTk.PhotoImage(ascii_image)
         after_image_label.config(image=photo, width=image_width, height=image_height)
         after_image_label.image = photo
-
-
 
 # Main window
 root = tk.Tk()
@@ -108,14 +106,14 @@ font_size_slider.pack()
 generate_ascii_image_button = tk.Button(root, text="Generate ASCII Image", command=generate_ascii_image)
 generate_ascii_image_button.pack()
 
+# create a button to save ascii image
+save_button = tk.Button(root, text="Save Image", command=save_file(after_image))
+save_button.pack()
+
 # 2 panes to display before and after images
 before_image_label = tk.Label(root)
 after_image_label = tk.Label(root)
 before_image_label.pack(side="left")
 after_image_label.pack(side="right")
-
-# create a button to save ascii image
-# save_button = tk.Button(root, text="Save Image", command=save_file(after_image))
-# save_button.pack()
 
 root.mainloop()
