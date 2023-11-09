@@ -25,7 +25,8 @@ def open_image():
 def save_file(image): 
     global after_image
     if after_image is not None:
-        file_path = filedialog.asksaveasfilename(defaultextension=".jpeg", filetypes=[("Image files", "*.png *.jpg *.jpeg *.gif *.bmp *.ppm *.pgm")])
+        default_file_name = "ascii.jpeg"
+        file_path = filedialog.asksaveasfilename(defaultextension=".jpeg", filetypes=[("Image files", "*.png *.jpg *.jpeg *.gif *.bmp *.ppm *.pgm")], initialfile=default_file_name)
         image.save(file_path)
 
 def scale_image(image, new_width=500):  
