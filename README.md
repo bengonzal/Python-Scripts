@@ -29,7 +29,7 @@ or
 6. Click the "Save Image" button
     - If you'd like to see a full-better view of your ascii generated image, click the save button to choose a folder and enter a name to save your generated image with.
 
-See included ascii_art_imgs for examples of created ascii_art images as well as some before images to see the transformation!
+See included imgur link - https://imgur.com/a/hBpK0B0 - for examples of created ascii_art images as well as some before images to see the transformation!
 
 ## TODO: 
 * implement a radio button that lets you check if you want to scale the image down - good for high resolution images
