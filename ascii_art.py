@@ -1,4 +1,5 @@
 import tkinter as tk
+import threading
 from tkinter import filedialog
 from PIL import Image, ImageTk, ImageDraw, ImageFont
 
@@ -29,12 +30,18 @@ def save_file(image):
         file_path = filedialog.asksaveasfilename(defaultextension=".jpeg", filetypes=[("Image files", "*.png *.jpg *.jpeg *.gif *.bmp *.ppm *.pgm")], initialfile=default_file_name)
         image.save(file_path)
 
-def scale_image(image, new_width=500):  
-    (original_width, original_height) = image.size
-    print("original_width: " + str(original_width) + " | original_height: " + str(original_height))
-    aspect_ratio = original_height / float(original_width)
-    new_height = int(aspect_ratio * new_width)
+def scale_image(image, scale_factor):  
+    if type(scale_factor) is str:
+        scale_factor = float(scale_factor)
+
+    # Get the original img dimensions
+    (original_width, original_height) = image.size 
+
+    # Calculate new dimensions based on scale factor
+    new_width = int(original_width * scale_factor)
+    new_height = int(original_height * scale_factor)
     new_image = image.resize((new_width, new_height))
+
     return new_image
 
 def apply_grayscale_filter(image):
@@ -42,19 +49,44 @@ def apply_grayscale_filter(image):
     grayscale_image = image.convert("L")
     return grayscale_image
 
-def apply_ascii_filter(image, new_width=100):
-    # image = scale_image(image, new_width) # useful for scaling down high resolution images
+def process_chunk(image, start_row, end_row, ascii_str, mapping_size):
+    width, height = image.size
+    for i in range(start_row, end_row):
+        for j in range(width):
+            pixel_value = image.getpixel((j, i))
+            ascii_str[i] += ASCII_CHARS[int(pixel_value // mapping_size)]
+        ascii_str[i] += "\n" 
+
+def apply_ascii_filter(image, new_width=100, num_threads=4):
     image = apply_grayscale_filter(image)
+    image = scale_image(image, scale_factor_spinbox.get())
 
     width, height = image.size
 
-    ascii_str = ""
-    for i in range(height):
-        for j in range(width):
-            pixel_value = image.getpixel((j, i))
-            ascii_str += ASCII_CHARS[int(pixel_value // mapping_size_slider.get())]  # Map grayscale value to ASCII chars
-        ascii_str += "\n"
-    return ascii_str
+    # Calculate the chunk size for each thread
+    chunk_size = height // num_threads
+    remainder = height % num_threads
+
+    # Create a list to hold the ASCII strings for each thread
+    ascii_str_list = ['' for _ in range(height)]
+
+    # Create and start threads
+    threads = []
+    for i in range(num_threads):
+        start_row = i * chunk_size
+        end_row = start_row + chunk_size + (1 if i < remainder else 0)
+        thread = threading.Thread(target=process_chunk, args=(image, start_row, end_row, ascii_str_list, mapping_size_slider.get()))
+        threads.append(thread)
+        thread.start()
+
+    # Wait for all threads to finish
+    for thread in threads:
+        thread.join()
+
+    # Combine the results from each thread
+    final_ascii_str = ''.join(ascii_str_list)
+    
+    return final_ascii_str
 
 def create_ascii_image(ascii_str, font_size):
     lines = ascii_str.strip().split('\n')
@@ -76,7 +108,7 @@ def create_ascii_image(ascii_str, font_size):
 def generate_ascii_image(): 
     global after_image
     if before_image is not None:
-        ascii_str = apply_ascii_filter(before_image, font_size_slider.get())
+        ascii_str = apply_ascii_filter(before_image)
         ascii_image, image_width, image_height = create_ascii_image(ascii_str, font_size_slider.get())
         after_image = ascii_image
         photo = ImageTk.PhotoImage(ascii_image)
@@ -98,6 +130,12 @@ mapping_size_label =  tk.Label(root, text="GRYSCL to ASCII Size")
 mapping_size_label.pack()
 mapping_size_slider = tk.Scale(root, from_=25, to=75, orient="horizontal")
 mapping_size_slider.pack()
+
+# create a spinbox for scale_factor
+scale_factor_label = tk.Label(root, text="Scale factor")
+scale_factor_label.pack(pady=12, padx=10)
+scale_factor_spinbox = tk.Spinbox(root, from_=0.1, to=2.0, increment=0.1)
+scale_factor_spinbox.pack(pady=12, padx=10)
 
 # create a slider to select font size for ASCII image
 font_size_label = tk.Label(root, text="Font Size")
