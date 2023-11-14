@@ -35,3 +35,4 @@ See included imgur link - https://imgur.com/a/hBpK0B0 - for examples of created 
 ## TODO:  
 * implement a canvas-type panel for the before/after images that let you zoom in like media-viewer functionalities 
 * optimize for memory usage
+* Work on modularity 
