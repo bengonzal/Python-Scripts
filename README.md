@@ -6,6 +6,15 @@ This program is very primitive/basic and does not have optimiztion for memory. T
 I created this using Anaconda for Windows/MacOS which can be downloaded here: https://www.anaconda.com/download
 A requirements.txt will be included in the directory.
 
+If you're a beginner to navigating to directories/running a command READ THIS!
+
+# After you've installed Anaconda, launch VSCODE
+It should look like a blue ribbon icon!
+- Then, in the top menu bar, click terminal -> New Terminal
+- Type the command ```ls```
+    - If you see the file "ascii_art.py" under NAMES, then you're good to continue following the README...
+    - if you see anything different, use the command ```cd ____``` with the blank characters representing the folder you're navigating through until you reach the repository containing "ascii_art.py"
+
 # How to Use: 
 1. In a terminal in the working directory, run
 ```python ascii_art.py``` for MacOS 
