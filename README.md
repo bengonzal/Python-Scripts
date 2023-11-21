@@ -1,7 +1,7 @@
 # ASCII_IMAGE_GENERATOR
 
 ## Before you use!
-This program is very primitive/basic and does not have optimiztion for speed or memory. Therefore, using this program with large resolution images can use a LOT of your memory and CPU. Use at your own risk! I will be working towards optimizing for speed and memory which can hopefully lessen those issues in the future.
+This program is very primitive/basic and does not have optimiztion for memory. Therefore, using this program with large resolution images can use a LOT of your memory and CPU. Use at your own risk! I will be working towards optimizing for speed and memory which can hopefully lessen those issues in the future.
 
 I created this using Anaconda for Windows/MacOS which can be downloaded here: https://www.anaconda.com/download
 A requirements.txt will be included in the directory.
@@ -17,6 +17,10 @@ or
 3. Using the "GRYSCL to ASCII Size" slider: 
     - Select the Grayscale to ASCII mapping value. This maps the grayscale value to ASCII chars.
     - If you have a high resolution image you are trying to generate an ascii image from, this might take a larger value to prevent string overflow errors.
+
+4. Using the "Scale Factor" slider:
+    - Select the scale factor slider value. This value determines whether you want to scale the original image UP or DOWN before generating the ASCII-rendition.
+    - This can be helpful for scaling large images down and reducing the need for memory or processing power!
 
 4. Using the "Font Size" slider:
     - Select the font size value. This is the font size of the ASCII characters used to generate your image.
@@ -35,4 +39,3 @@ See included imgur link - https://imgur.com/a/hBpK0B0 - for examples of created 
 ## TODO:  
 * implement a canvas-type panel for the before/after images that let you zoom in like media-viewer functionalities 
 * optimize for memory usage
-* Work on modularity 
